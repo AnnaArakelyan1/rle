@@ -1,32 +1,62 @@
 #include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 
-void printRLE(string str,string& rleStr)
-{
-    int n = str.length();
-    for (int i = 0; i < n; i++) {
+
+class RLE {
+    
+public:
  
-
+string encode(const string& input) {
+        string encoded;
         int count = 1;
-        while (i < n - 1 && str[i] == str[i + 1]) {
-            count++;
-            i++;
+
+        for (int i = 1; i <= input.length(); i++) {
+            if (i < input.length() && input[i] == input[i - 1]) {
+                count++;
+            }
+            else {
+                encoded += input[i - 1] + to_string(count);
+                count = 1;
+            }
         }
-        rleStr.insert(rleStr.end(),str[i-1]);
-        rleStr.insert(rleStr.end(),(char)count);
-       
-        cout << str[i] << count;
+
+        return encoded;
     }
-    cout << '\n' <<   rleStr << '\n';
-}
 
 
+string decode(const string& encoded) {
+        string decoded;
+        for (int i = 0; i < encoded.length(); i++) {
+            char currentChar = encoded[i];
+            i++;
+            string countStr;
+            while (i < encoded.length() && isdigit(encoded[i])) {
+                countStr += encoded[i];
+                i++;
+            }
+            i--; 
 
+            int count =stoi(countStr);
+            decoded.append(count, currentChar);
+        }
 
-int main()
-{
-    string str = "iiiiiiiiiiiexxxxxxywww";
-    string rleStr;
-    printRLE(str,rleStr);
+        return decoded;
+    }
+    
+    
+};
+
+int main() {
+    RLE rle;
+    string input = "aaabbbccd";
+    string encoded = rle.encode(input);
+    string decoded = rle.decode(encoded);
+
+    cout << "Input: " << input << endl;
+    cout << "Encoded: " << encoded <<endl;
+    cout << "Decoded: " << decoded <<endl;
+
     return 0;
 }
